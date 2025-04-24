@@ -1,17 +1,18 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+    <script src="https://www.paypal.com/sdk/js?client-id=ATOgCIVEnIV6mMc-E0UG1ZLJKx1_HiwXwM7QLxVFAUuKWeYqMHpgMNO8mNDlRv4DUMtJSPu-5H9ms78H"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - Café au Coéur</title>
     <meta name="description" content="Complete your order from Café au Coéur">
-    
+
     <!-- CSS Links -->
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/checkout.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -50,7 +51,7 @@
                 </a>
                 <h1>Checkout</h1>
             </div>
-            
+
             <div class="checkout-grid">
                 <div class="checkout-main">
                     <!-- Delivery Options -->
@@ -66,7 +67,7 @@
                                 <label for="pickup">Pickup from Store</label>
                             </div>
                         </div>
-                        
+
                         <div class="delivery-address" id="deliveryAddressForm">
                             <h3>Delivery Address</h3>
                             <form>
@@ -91,7 +92,10 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="state">State</label>
-                                        <input type="text" id="state"  required>
+                                        <select id="state">
+                                          <option value="">-- Select State --</option>
+                                          <option value="Delhi">Delhi</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -100,7 +104,7 @@
                                 </div>
                             </form>
                         </div>
-                        
+
                         <div class="pickup-info" id="pickupInfo" style="display: none;">
                             <h3>Pickup Details</h3>
                             <p><i class="fas fa-map-marker-alt"></i> Café au Coéur, 123 Paris Street, New Delhi - 110001</p>
@@ -115,7 +119,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Payment Methods -->
                     <div class="checkout-card">
                         <h2>Payment Methods</h2>
@@ -133,7 +137,7 @@
                                     <span class="checkmark"></span>
                                 </div>
                             </div>
-                            
+
                             <div class="payment-method" data-method="debit-card">
                                 <div class="payment-icon">
                                     <i class="fas fa-credit-card"></i>
@@ -147,7 +151,7 @@
                                     <span class="checkmark"></span>
                                 </div>
                             </div>
-                            
+
                             <div class="payment-method" data-method="upi">
                                 <div class="payment-icon">
                                     <i class="fas fa-mobile-alt"></i>
@@ -161,7 +165,7 @@
                                     <span class="checkmark"></span>
                                 </div>
                             </div>
-                            
+
                             <div class="payment-method" data-method="qr-code">
                                 <div class="payment-icon">
                                     <i class="fas fa-qrcode"></i>
@@ -175,7 +179,7 @@
                                     <span class="checkmark"></span>
                                 </div>
                             </div>
-                            
+
                             <div class="payment-method" data-method="cash">
                                 <div class="payment-icon">
                                     <i class="fas fa-money-bill-wave"></i>
@@ -190,7 +194,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Payment Method Forms -->
                         <div class="payment-forms">
                             <!-- Credit Card Form -->
@@ -215,7 +219,10 @@
                                     <input type="text" id="cardName" placeholder="John Doe">
                                 </div>
                             </div>
-                            
+
+                            <div id="paypal-button-container"></div>
+
+
                             <!-- UPI Payment Form -->
                             <div class="payment-form" id="upiForm" style="display: none;">
                                 <h3>UPI Payment</h3>
@@ -225,7 +232,7 @@
                                 </div>
                                 <button class="btn btn-secondary" id="verifyUpi">Verify & Pay</button>
                             </div>
-                            
+
                             <!-- QR Code Payment -->
                             <div class="payment-form" id="qrCodeForm" style="display: none;">
                                 <h3>Scan this QR Code</h3>
@@ -238,7 +245,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Order Summary -->
                 <div class="checkout-sidebar">
                     <div class="checkout-card order-summary">
@@ -314,5 +321,23 @@
     <!-- JavaScript -->
     <script src="js/main.js"></script>
     <script src="js/checkout.js"></script>
+    <script>
+        paypal.Buttons({
+          createOrder: function(data, actions) {
+            return actions.order.create({
+              purchase_units: [{
+                amount: { value: '350.00' }
+              }]
+            });
+          },
+          onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+              alert('Transaction completed by ' + details.payer.name.given_name);
+              window.location.href = "order-confirmed.html";
+            });
+          }
+        }).render('#paypal-button-container');
+        </script>
+        
 </body>
 </html>
